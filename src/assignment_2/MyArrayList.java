@@ -1,145 +1,159 @@
 package assignment_2;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
-public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
-    private Object[] elements;
-    private int length;
+@SuppressWarnings("unchecked")
+public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
+    private Object[] data;
+    private int size;
 
     public MyArrayList() {
-        elements = new Object[5];
-        length = 0;
+        data = new Object[10];
+        size = 0;
     }
 
-    public void add(T element) {
-        if (length == elements.length) {
-            increaseCapacity();
-        }
-        elements[length++] = element;
-    }
-
-    private void increaseCapacity() {
-        Object[] newElements = new Object[elements.length * 2];
-        for (int i = 0; i < elements.length; i++) {
-            newElements[i] = elements[i]; //upcasting
-        }
-        elements = newElements;
-    }
-
-    public T get(int index) {
-        checkIndex(index);
-        return (T) elements[index]; //downcasting
-    }
-
-    @Override
-    public T getFirst() {
-        return (T) elements[0];
-    }
-
-    @Override
-    public T getLast() {
-        return (T) elements[elements.length - 1];
-    }
-
-    public void remove(int index){
-        checkIndex(index);
-        for (int i = index; i < length - 1; i++) {
-            elements[i] = elements[i+1];
-        }
-        elements[length - 1] = null; // удаляем дубликат последнего
-        length--;
-    }
-
-    @Override
-    public void removeFirst() {
-        elements = Arrays.copyOfRange(elements, 1,length - 1);
-    }
-
-    @Override
-    public void removeLast() {
-        elements = Arrays.copyOfRange(elements, 0,length - 2);
-    }
-
-    @Override
-    public void sort() {
-        for (int i = 0; i < length - 1; i++) {
-            for (int j = 0; j < length - i - 1; j++) {
-                T a = (T) elements[j];
-                T b = (T) elements[j + 1];
-                if (a != null && b != null && a.compareTo(b) > 0) {
-                    Object temp = elements[j];
-                    elements[j] = elements[j + 1];
-                    elements[j + 1] = temp;
-                }
+    private void ensureCapacity() {
+        if (size == data.length) {
+            Object[] newData = new Object[data.length * 2];
+            for (int i = 0; i < size; i++) {
+                newData[i] = data[i];
             }
+            data = newData;
         }
-    }
-
-    @Override
-    public int indexOf(Object object) {
-        return 0;
-    }
-
-    @Override
-    public int lastIndexOf(Object object) {
-        return 0;
-    }
-
-    @Override
-    public boolean exists(Object object) {
-        return false;
-    }
-
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
-
-    private void checkIndex(int index){
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Index: " + index + " not found");
-        }
-    }
-
-    public int size() {
-        return length;
-    }
-
-    public void clear() {
-        for (int i = 0; i < length; i++) {
-            elements[i] = null; // удаляем ссылки на все элементы
-        }
-        length = 0; // обнуляем количество элементов
     }
 
     @Override
     public void aadd(T item) {
-
+        ensureCapacity();
+        data[size++] = item;
     }
 
-    public void set(int index, T value) {
-        checkIndex(index);
-        elements[index] = value;
+    @Override
+    public void set(int index, T item) {
+        checkBounds(index);
+        data[index] = item;
     }
 
     @Override
     public void add(int index, T item) {
-
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+        ensureCapacity();
+        for (int i = size; i > index; i--) {
+            data[i] = data[i - 1];
+        }
+        data[index] = item;
+        size++;
     }
+
 
     @Override
     public void addFirst(T item) {
-
+        add(0, item);
     }
 
     @Override
     public void addLast(T item) {
-
+        aadd(item);
     }
 
     @Override
-    public Iterator<T> iterator() {
-        return null;
+    public T get(int index) {
+        checkBounds(index);
+        return (T) data[index];
+    }
+
+    @Override
+    public T getFirst() {
+        return get(0);
+    }
+
+    @Override
+    public T getLast() {
+        return get(size - 1);
+    }
+
+    @Override
+    public void remove(int index) {
+        checkBounds(index);
+        for (int i = index; i < size - 1; i++) {
+            data[i] = data[i + 1];
+        }
+        data[--size] = null;
+    }
+
+    @Override
+    public void removeFirst() {
+        remove(0);
+    }
+
+    @Override
+    public void removeLast() {
+        remove(size - 1);
+    }
+
+    @Override
+    public void sort() {
+        // Твой выбор: реализовать позже через Comparable или Comparator
+        throw new UnsupportedOperationException("Sort not implemented yet");
+    }
+
+    @Override
+    public int indexOf(Object object) {
+        for (int i = 0; i < size; i++) {
+            if (data[i].equals(object)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object object) {
+        for (int i = size - 1; i >= 0; i--) {
+            if (data[i].equals(object)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean exists(Object object) {
+        return indexOf(object) != -1;
+    }
+
+    @Override
+    public Object[] toArray() {
+        Object[] result = new Object[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = data[i];
+        }
+        return result;
+    }
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            data[i] = null;
+        }
+        size = 0;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    private void checkBounds(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+    }
+
+    @Override
+    public java.util.Iterator<T> iterator() {
+        return new java.util.Iterator<T>() {
+            private int current = 0;
+            @Override
+            public boolean hasNext() {
+                return current < size;
+            }
+            @Override
+            public T next() {
+                return (T) data[current++];
+            }
+        };
     }
 }

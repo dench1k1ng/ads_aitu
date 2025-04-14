@@ -1,50 +1,63 @@
-import assignment_2.MyArrayList;
-
-import java.util.ArrayList;
+package assignment_2;
 
 public class Main {
     public static void main(String[] args) {
-        MyArrayList<Integer> list = new MyArrayList<>();
+        System.out.println("=== MyArrayList ===");
+        MyList<Integer> arrayList = new MyArrayList<>();
+        arrayList.aadd(5);
+        arrayList.aadd(3);
+        arrayList.aadd(8);
+        arrayList.aadd(1);
+        print(arrayList);
+        arrayList.sort();
+        System.out.println("Sorted:");
+        print(arrayList);
 
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-        list.add(6);
-
-        print(list);
-        System.out.println("___________________________________________________");
-
-        MyLinkedList<Integer> linkedList = new MyLinkedList<>();
-
-        linkedList.add(1);
-        linkedList.add(2);
-        linkedList.add(3);
-        linkedList.add(4);
-        linkedList.add(5);
-        linkedList.add(6);
-
+        System.out.println("\n=== MyLinkedList ===");
+        MyList<String> linkedList = new MyLinkedList<>();
+        linkedList.addFirst("C");
+        linkedList.addLast("A");
+        linkedList.add(1, "B");
+        print(linkedList);
+        linkedList.remove(1);
+        System.out.println("After remove index 1:");
         print(linkedList);
 
-
+        System.out.println("\n=== MyStack ===");
         MyStack<Integer> stack = new MyStack<>();
-        stack.push(1);
-        stack.push(2);
-        stack.push(3);
+        stack.push(10);
+        stack.push(20);
+        stack.push(30);
+        System.out.println("Pop: " + stack.pop());
+        System.out.println("Peek: " + stack.peek());
+        System.out.println("Size: " + stack.size());
 
-        System.out.println("______________________________________");
-        System.out.println(stack.pop());
-        System.out.println(stack.peek());
-        System.out.println(stack.size());
+        System.out.println("\n=== MyQueue ===");
+        MyQueue<String> queue = new MyQueue<>();
+        queue.enqueue("one");
+        queue.enqueue("two");
+        queue.enqueue("three");
+        System.out.println("Dequeue: " + queue.dequeue());
+        System.out.println("Peek: " + queue.peek());
+        System.out.println("Size: " + queue.size());
 
+        System.out.println("\n=== MyMinHeap ===");
+        MyMinHeap<Integer> heap = new MyMinHeap<>();
+        heap.insert(50);
+        heap.insert(20);
+        heap.insert(30);
+        heap.insert(10);
+        heap.insert(40);
+
+        System.out.println("ExtractMin: " + heap.extractMin());
+        System.out.println("PeekMin: " + heap.peekMin());
+        System.out.println("Size: " + heap.size());
     }
 
-    public static void print(MyList<Integer> list) {
-        for (int i =0; i<list.size(); i++){
-            System.out.print(list.get(i)+" ");
+    public static <T> void print(MyList<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            System.out.print(list.get(i) + " ");
         }
         System.out.println();
     }
-
 }

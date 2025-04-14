@@ -1,131 +1,199 @@
 package assignment_2;
 
-import java.util.Iterator;
+@SuppressWarnings("unchecked")
+public class MyLinkedList<T> implements MyList<T> {
 
-public class MyLinkedList<T> implements MyList<T>{
-    private MyNode<T> node;
-    private int length;
-    public MyLinkedList(){
-        node = null;
-        length = 0;
-    }
+    private class MyNode {
+        T data;
+        MyNode next, prev;
 
-    @Override
-    public void add(T element) {
-        MyNode<T> newNode = new MyNode<>(element);
-        if(node==null){
-            node = newNode;
+        MyNode(T data) {
+            this.data = data;
         }
-        else{
-            MyNode<T> current = node;
-            while (current.next != null){
-                current = current.next;
-            }
-            current.next = newNode;
-
-        }
-        length++;
     }
 
-    @Override
-    public void remove(int index) {
+    private MyNode head, tail;
+    private int size;
 
-    }
-
-    @Override
-    public void removeFirst() {
-
-    }
-
-    @Override
-    public void removeLast() {
-
-    }
-
-    @Override
-    public void sort() {
-
-    }
-
-    @Override
-    public int indexOf(Object object) {
-        return 0;
-    }
-
-    @Override
-    public int lastIndexOf(Object object) {
-        return 0;
-    }
-
-    @Override
-    public boolean exists(Object object) {
-        return false;
-    }
-
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
-
-    @Override
-    public void clear() {
-
+    public MyLinkedList() {
+        head = tail = null;
+        size = 0;
     }
 
     @Override
     public void aadd(T item) {
-        
+        addLast(item);
     }
 
     @Override
     public void set(int index, T item) {
-
+        checkBounds(index);
+        getNode(index).data = item;
     }
 
     @Override
     public void add(int index, T item) {
-
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+        if (index == 0) addFirst(item);
+        else if (index == size) addLast(item);
+        else {
+            MyNode next = getNode(index);
+            MyNode prev = next.prev;
+            MyNode newNode = new MyNode(item);
+            newNode.prev = prev;
+            newNode.next = next;
+            prev.next = newNode;
+            next.prev = newNode;
+            size++;
+        }
     }
 
     @Override
     public void addFirst(T item) {
-
+        MyNode newNode = new MyNode(item);
+        if (head == null) {
+            head = tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addLast(T item) {
-
+        MyNode newNode = new MyNode(item);
+        if (tail == null) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+        size++;
     }
 
     @Override
     public T get(int index) {
-        if(index<0 || index>=size()){
-            throw new IndexOutOfBoundsException();
-        }
-        MyNode<T> current = node;
-        for(int i=0;i<index;i++){
-            current = current.next;
-        }
-        return current.data;
+        checkBounds(index);
+        return getNode(index).data;
+    }
+
+    private MyNode getNode(int index) {
+        MyNode current = head;
+        for (int i = 0; i < index; i++) current = current.next;
+        return current;
     }
 
     @Override
     public T getFirst() {
-        return null;
+        return get(0);
     }
 
     @Override
     public T getLast() {
-        return null;
+        return get(size - 1);
+    }
+
+    @Override
+    public void remove(int index) {
+        checkBounds(index);
+        MyNode target = getNode(index);
+        MyNode prev = target.prev;
+        MyNode next = target.next;
+
+        if (prev != null) prev.next = next;
+        else head = next;
+
+        if (next != null) next.prev = prev;
+        else tail = prev;
+
+        size--;
+    }
+
+    @Override
+    public void removeFirst() {
+        remove(0);
+    }
+
+    @Override
+    public void removeLast() {
+        remove(size - 1);
+    }
+
+    @Override
+    public void sort() {
+        throw new UnsupportedOperationException("Sort not implemented");
+    }
+
+    @Override
+    public int indexOf(Object object) {
+        int index = 0;
+        for (T item : this) {
+            if (item.equals(object)) return index;
+            index++;
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object object) {
+        int index = size - 1;
+        MyNode current = tail;
+        while (current != null) {
+            if (current.data.equals(object)) return index;
+            current = current.prev;
+            index--;
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean exists(Object object) {
+        return indexOf(object) != -1;
+    }
+
+    @Override
+    public Object[] toArray() {
+        Object[] result = new Object[size];
+        MyNode current = head;
+        for (int i = 0; i < size; i++) {
+            result[i] = current.data;
+            current = current.next;
+        }
+        return result;
+    }
+
+    @Override
+    public void clear() {
+        head = tail = null;
+        size = 0;
     }
 
     @Override
     public int size() {
-        return length;
+        return size;
+    }
+
+    private void checkBounds(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
     }
 
     @Override
-    public Iterator<T> iterator() {
-        return null;
+    public java.util.Iterator<T> iterator() {
+        return new java.util.Iterator<T>() {
+            MyNode current = head;
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+            @Override
+            public T next() {
+                T value = current.data;
+                current = current.next;
+                return value;
+            }
+        };
     }
 }
