@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyList<T> {
     }
 
     @Override
-    public void aadd(T item) {
+    public void addShort(T item) {
         addLast(item);
     }
 
@@ -124,7 +124,24 @@ public class MyLinkedList<T> implements MyList<T> {
 
     @Override
     public void sort() {
-        throw new UnsupportedOperationException("Sort not implemented");
+        if (size <= 1) return;
+        Object[] array = toArray();
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                Comparable<T> a = (Comparable<T>) array[j];
+                T b = (T) array[j + 1];
+                if (a.compareTo(b) > 0) {
+                    Object temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+        MyNode current = head;
+        for (int i = 0; i < size; i++) {
+            current.data = (T) array[i];
+            current = current.next;
+        }
     }
 
     @Override

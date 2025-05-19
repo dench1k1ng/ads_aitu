@@ -4,10 +4,10 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== MyArrayList ===");
         MyList<Integer> arrayList = new MyArrayList<>();
-        arrayList.aadd(5);
-        arrayList.aadd(3);
-        arrayList.aadd(8);
-        arrayList.aadd(1);
+        arrayList.addShort(5);
+        arrayList.addShort(3);
+        arrayList.addShort(8);
+        arrayList.addShort(1);
         print(arrayList);
         arrayList.sort();
         System.out.println("Sorted:");

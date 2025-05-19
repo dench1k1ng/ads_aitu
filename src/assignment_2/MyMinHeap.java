@@ -9,7 +9,7 @@ public class MyMinHeap<T extends Comparable<T>> {
     }
 
     public void insert(T item) {
-        heap.aadd(item);
+        heap.addShort(item);
         siftUp(heap.size() - 1);
     }
 

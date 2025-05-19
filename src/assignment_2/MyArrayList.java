@@ -21,7 +21,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
     }
 
     @Override
-    public void aadd(T item) {
+    public void addShort(T item) {
         ensureCapacity();
         data[size++] = item;
     }
@@ -51,7 +51,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
 
     @Override
     public void addLast(T item) {
-        aadd(item);
+        addShort(item);
     }
 
     @Override
@@ -91,8 +91,17 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
 
     @Override
     public void sort() {
-        // Твой выбор: реализовать позже через Comparable или Comparator
-        throw new UnsupportedOperationException("Sort not implemented yet");
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                T current = (T) data[j];
+                T next = (T) data[j + 1];
+                if (current.compareTo(next) > 0) {
+                    // Swap
+                    data[j] = next;
+                    data[j + 1] = current;
+                }
+            }
+        }
     }
 
     @Override

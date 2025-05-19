@@ -1,7 +1,7 @@
 package assignment_2;
 
 public interface MyList<T> extends Iterable<T> {
-    void aadd(T item);
+    void addShort(T item);
     void set(int index, T item);
     void add(int index, T item);
     void addFirst(T item);
@@ -10,7 +10,7 @@ public interface MyList<T> extends Iterable<T> {
     T getFirst();
     T getLast();
     void remove(int index);
-    void removeFirst();
+    void removeFirst() ;
     void removeLast();
     void sort();
     int indexOf(Object object);
